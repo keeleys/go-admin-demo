@@ -1,6 +1,9 @@
 package main
 
 import (
+	"hello/table"
+	"os"
+
 	_ "github.com/GoAdminGroup/go-admin/adapter/gin"
 	"github.com/GoAdminGroup/go-admin/engine"
 	"github.com/GoAdminGroup/go-admin/examples/datamodel"
@@ -13,10 +16,14 @@ import (
 	"github.com/GoAdminGroup/go-admin/template/types"
 	"github.com/GoAdminGroup/themes/adminlte"
 	"github.com/gin-gonic/gin"
-	"hello/table"
 )
 
 func main() {
+	dbName := os.Getenv("DB_NAME")
+	dbPass := os.Getenv("DB_PASS")
+	dbHost := os.Getenv("DB_HOST")
+	dbPort := os.Getenv("DB_PORT")
+
 	r := gin.Default()
 
 	eng := engine.Default()
@@ -25,11 +32,11 @@ func main() {
 	cfg := config.Config{
 		Databases: config.DatabaseList{
 			"default": {
-				Host:       "127.0.0.1",
-				Port:       "3306",
+				Host:       dbHost,
+				Port:       dbPort,
 				User:       "root",
-				Pwd:        "ttianjun",
-				Name:       "godmin",
+				Pwd:        dbPass,
+				Name:       dbName,
 				MaxIdleCon: 50,
 				MaxOpenCon: 150,
 				Driver:     "mysql",
