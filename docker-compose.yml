@@ -1,0 +1,27 @@
+version: "3"
+services:
+  db:
+    build:
+      context: ./mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ttianjun
+    container_name: go-admin-db
+    volumes:
+        - ./mysql:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    tty: true
+  web:
+    build:
+      context: ./
+    container_name: go-admin-web
+    ports:
+      - "9033:9033"
+    tty: true
+    links:
+      - db
+    environment:
+      - "DB_PORT=3306"
+      - "DB_HOST=db"
+      - "DB_NAME=godmin"
+      - "DB_PASS=ttianjun"
