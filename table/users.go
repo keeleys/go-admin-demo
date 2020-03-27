@@ -1,6 +1,7 @@
 package table
 
 import (
+	"github.com/GoAdminGroup/go-admin/context"
 	"html/template"
 
 	"github.com/GoAdminGroup/go-admin/modules/db"
@@ -9,7 +10,7 @@ import (
 	"github.com/GoAdminGroup/go-admin/template/types/form"
 )
 
-func GetUsersTable() table.Table {
+func GetUsersTable(ctx *context.Context) table.Table {
 
 	usersTable := table.NewDefaultTable(table.DefaultConfigWithDriver("mysql"))
 
@@ -40,17 +41,17 @@ func GetUsersTable() table.Table {
 	formList.AddField("Id", "id", db.Int, form.Default).FieldNotAllowAdd()
 	formList.AddField("名称", "name", db.Varchar, form.Text)
 	formList.AddField("性别", "gender", db.Tinyint, form.Radio).
-		FieldOptions([]map[string]string{
+		FieldOptions([]types.FieldOption{
 			{
-				"field":    "gender",
-				"label":    "男",
-				"value":    "0",
-				"selected": "true",
+				SelectedLabel:    "gender",
+				Text:    "男",
+				Value:    "0",
+				Selected: true,
 			}, {
-				"field":    "gender",
-				"label":    "女",
-				"value":    "1",
-				"selected": "false",
+			SelectedLabel:    "gender",
+			Text:     "女",
+			Value:      "1",
+			Selected: false,
 			},
 		})
 	formList.AddField("城市", "city", db.Varchar, form.Text)
