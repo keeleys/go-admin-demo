@@ -2,8 +2,6 @@ package table
 
 import (
 	"github.com/GoAdminGroup/go-admin/context"
-	"html/template"
-
 	"github.com/GoAdminGroup/go-admin/modules/db"
 	"github.com/GoAdminGroup/go-admin/plugins/admin/modules/table"
 	"github.com/GoAdminGroup/go-admin/template/types"
@@ -11,7 +9,6 @@ import (
 )
 
 func GetUsersTable(ctx *context.Context) table.Table {
-
 	usersTable := table.NewDefaultTable(table.DefaultConfigWithDriver("mysql"))
 
 	info := usersTable.GetInfo()
@@ -33,8 +30,7 @@ func GetUsersTable(ctx *context.Context) table.Table {
 	info.AddField("创建时间", "created_at", db.Timestamp).FieldSortable()
 	info.AddField("修改时间", "updated_at", db.Timestamp)
 
-	info.SetTable("users").SetTitle("Users").SetDescription("客户").
-		SetAction(template.HTML(`<a href="http://google.com"><i class="fa fa-google"></i></a>`)) // 自定义操作按钮
+	info.SetTable("users").SetTitle("Users").SetDescription("客户")
 
 	formList := usersTable.GetForm()
 
@@ -57,10 +53,6 @@ func GetUsersTable(ctx *context.Context) table.Table {
 	formList.AddField("城市", "city", db.Varchar, form.Text)
 	formList.AddField("ip地址", "ip", db.Varchar, form.Ip)
 	formList.AddField("手机号", "phone", db.Varchar, form.Text)
-	formList.AddField("创建时间", "created_at", db.Timestamp, form.Datetime)
-	formList.AddField("修改时间", "updated_at", db.Timestamp, form.Datetime)
-
 	formList.SetTable("users").SetTitle("Users").SetDescription("Users")
-
 	return usersTable
 }
