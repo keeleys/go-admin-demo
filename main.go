@@ -19,41 +19,38 @@ func main() {
 	r := gin.Default()
 	eng := engine.Default()
 	cfg := config.ReadFromJson("./config.json")
-	dateConfig := cfg.Databases.GetDefault()
-	fillEnv(&dateConfig)
-	cfg.Databases.Add("default", dateConfig )
+	fillEnv(&cfg)
 
-	adminPlugin := admin.NewAdmin(datamodel.Generators)
-
+	adminPlugin := admin.NewAdmin(module.Generators)
 	adminPlugin.AddGenerator("user", datamodel.GetUserTable)
-	for k,v := range module.Generators {
-		adminPlugin.AddGenerator(k,v)
-	}
 
 	_ = eng.AddConfig(cfg).AddPlugins(adminPlugin).Use(r)
-	println(module.Generators["users"])
-	eng.HTML("GET", "/admin", func(ctx *context.Context) (panel types.Panel, err error) {
-		return types.Panel{
-			Content:   "",
-			Title:       "首页",
-			Description: "",
-		}, nil
-	} )
+	eng.HTML("GET", cfg.PrefixFixSlash(), homePage )
 	_ = r.Run(":9033")
 }
 
 /**
 fill env to database config
  */
-func fillEnv(database * config.Database){
+func fillEnv(cfg *config.Config){
+	dateConfig := cfg.Databases.GetDefault()
 	envDefault := func(key string, val *string) {
 		port, find :=os.LookupEnv(key)
 		if find{
 			*val = port
 		}
 	}
-	envDefault("DB_PORT", &database.Port)
-	envDefault("DB_HOST", &database.Host)
-	envDefault("DB_NAME", &database.Name)
-	envDefault("DB_PASS", &database.Pwd)
+	envDefault("DB_PORT", &dateConfig.Port)
+	envDefault("DB_HOST", &dateConfig.Host)
+	envDefault("DB_NAME", &dateConfig.Name)
+	envDefault("DB_PASS", &dateConfig.Pwd)
+	cfg.Databases.Add("default", dateConfig )
+}
+
+func homePage(ctx *context.Context) (panel types.Panel, err error) {
+	return types.Panel{
+		Content:   "",
+		Title:       "首页",
+		Description: "",
+	}, nil
 }
